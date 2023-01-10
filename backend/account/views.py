@@ -9,6 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import status, permissions
 
 from .serializers import *
+from .models import *
 
 
 class RegisterViewSet(APIView):
@@ -39,12 +40,12 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def current_user(self, request):
+    def my_profile(self, request):
         serializer = UserSerializer(request.user)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def upload_resume(self, request):
+    def update_profile(self, request, *args, **kwargs):
         user = request.user
         resume = request.FILES['resume']
         if resume == '':
@@ -55,3 +56,10 @@ class UserViewSet(ModelViewSet):
 
         serializer = UserSerializer(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserProfileViewSet(ModelViewSet):
+    queryset = UserProfileModel.objects.all()
+    serializer_class = UserProfileSerializer
+    authentication_classes = []
+    permission_classes = []

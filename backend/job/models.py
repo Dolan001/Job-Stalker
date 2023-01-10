@@ -1,11 +1,13 @@
 import os
 import geocoder
 import datetime
+import uuid
 from django.db import models
 from django.contrib.gis.db import models as gismodels
 from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 def return_date_time():
     now = datetime.datetime.now()
@@ -43,6 +45,7 @@ class Experience(models.TextChoices):
 
 
 class JobModel(models.Model):
+    job_id = models.UUIDField(default=uuid.uuid4, unique=True, db_index=True, editable=False)
     title = models.CharField(max_length=100, null=True)
     description = models.TextField(null=True)
     email = models.EmailField(null=True)
@@ -93,4 +96,3 @@ class CandidateApplyModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='apply_user')
     resume = models.FileField(upload_to='resume', null=True)
     applied_at = models.DateTimeField(auto_now_add=True)
-

@@ -12,8 +12,11 @@ class JobSerializer(ModelSerializer):
 
 class CandidateApplySerializer(ModelSerializer):
 
-    # job = JobSerializer()
-
     class Meta:
         model = CandidateApplyModel
         fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'resume': {'read_only': True},
+        }

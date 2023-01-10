@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
+from .models import *
+
 
 class SignUpSerializer(serializers.ModelSerializer):
 
@@ -31,8 +33,8 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
 
-    resume = serializers.CharField(source='userprofile.resume')
-    image = serializers.CharField(source='userprofile.image')
+    resume = serializers.CharField(source='userprofile.resume', read_only=True)
+    image = serializers.CharField(source='userprofile.image', read_only=True)
 
     class Meta:
         model = User
@@ -44,3 +46,10 @@ class UserSerializer(serializers.ModelSerializer):
             'image',
             'resume',
         )
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfileModel
+        fields = '__all__'

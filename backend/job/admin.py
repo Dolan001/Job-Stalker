@@ -11,3 +11,13 @@ class JobAdmin(admin.ModelAdmin):
 
 
 admin.site.register(JobModel, JobAdmin)
+
+
+class CandidateApplyAdmin(admin.ModelAdmin):
+    list_display = ['job', 'user', 'resume', 'applied_at']
+
+    class Meta:
+        model = CandidateApplyModel
+
+
+admin.site.register(CandidateApplyModel, CandidateApplyAdmin)
