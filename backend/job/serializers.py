@@ -12,6 +12,9 @@ class JobSerializer(ModelSerializer):
 
 class CandidateApplySerializer(ModelSerializer):
 
+    job = JobSerializer()
+    user = CharField()
+
     class Meta:
         model = CandidateApplyModel
         fields = '__all__'

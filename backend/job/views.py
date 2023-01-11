@@ -54,6 +54,25 @@ class JobViewSet(ModelViewSet):
             status=status.HTTP_200_OK
         )
 
+    def my_jobs(self, request):
+        args = {'user': request.user.id}
+
+        jobs = JobModel.objects.filter(**args)
+        serializer = JobSerializer(jobs, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def applied_my_job(self, request, pk):
+        user = request.user
+        job = get_object_or_404(JobModel, id=pk)
+
+        if job.user != user:
+            return Response({'detail': 'You can not access this Job'}, status=status.HTTP_403_FORBIDDEN)
+
+        candidates = job.apply_job.all()
+        serializer = CandidateApplySerializer(candidates, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class CandidateApplyViewSet(ModelViewSet):
     queryset = CandidateApplyModel.objects.all()
@@ -73,6 +92,9 @@ class CandidateApplyViewSet(ModelViewSet):
 
         if job.apply_job.filter(user=user).exists():
             return Response({'detail': 'Your already applied this job'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if job.user == user:
+            return Response({'detail': 'You can not apply your own job'}, status=status.HTTP_400_BAD_REQUEST)
 
         apply_job = CandidateApplyModel.objects.create(
             job=job,
@@ -94,3 +116,11 @@ class CandidateApplyViewSet(ModelViewSet):
         serializer = CandidateApplySerializer(queryset, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def is_applied(self, request, pk=None):
+        user = request.user
+        job = get_object_or_404(JobModel, id=pk)
+
+        applied = job.apply_job.filter(user=user).exists()
+
+        return Response(applied)

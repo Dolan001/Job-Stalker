@@ -12,5 +12,9 @@ router.register('apply-job', CandidateApplyViewSet, basename='apply')
 urlpatterns = [
     path('stats/<str:topic>', JobViewSet.as_view({'get': 'getTopicStats'}), name='job_stat'),
     path('filter/', JobViewSet.as_view({'get': 'jobFilter'}), name='job_filter'),
-    path('my-applied-jobs/', CandidateApplyViewSet.as_view({'get': 'my_applied_jobs'}), name='my_applied_jobs')
+    path('my-jobs/', JobViewSet.as_view({'get': 'my_jobs'}), name='my_jobs'),
+    path('applied-my-job/<str:pk>/', JobViewSet.as_view({'get': 'applied_my_job'}), name='applied_my_job'),
+
+    path('applied-jobs/', CandidateApplyViewSet.as_view({'get': 'my_applied_jobs'}), name='my_applied_jobs'),
+    path('check/<str:pk>/', CandidateApplyViewSet.as_view({'get': 'is_applied'}), name='is_applied'),
 ] + router.urls
