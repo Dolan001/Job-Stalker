@@ -15,27 +15,9 @@ class JobViewSet(ModelViewSet):
     queryset = JobModel.objects.all()
     serializer_class = JobSerializer
     # authentication_classes = []
-    permission_classes = [IsAuthorOrIsAuthenticated]
+    # permission_classes = [IsAuthorOrIsAuthenticated]
 
-    def getTopicStats(self, request, topic):
-        args = {
-            'title__icontains': topic
-        }
-        jobs = JobModel.objects.filter(**args)
-
-        if jobs is None:
-            return Response({'details': f'No stat found for {topic}'})
-
-        stats = jobs.aggregate(
-            total_jobs=Count('title'),
-            avg_position=Avg('positions'),
-            avg_salary=Avg('salary'),
-            min_salary=Min('salary'),
-            max_salary=Max('salary')
-        )
-        return Response(stats, status=status.HTTP_200_OK)
-
-    def jobFilter(self, request):
+    def list(self, request):
         filter_set = JobFilter(request.GET, queryset=JobModel.objects.all().order_by('id'))
         count = filter_set.qs.count()
         result_per_page = 3
@@ -53,6 +35,36 @@ class JobViewSet(ModelViewSet):
             },
             status=status.HTTP_200_OK
         )
+    
+    def retrieve(self, request, *args, **kwargs):
+        id = self.kwargs['pk']
+        job = get_object_or_404(JobModel, id=id)
+        candidates = job.apply_job.all().count()
+
+        serializer = JobSerializer(job, many=False)
+
+        return Response({
+            'job': serializer.data,
+            'candidates': candidates
+        })
+    
+    def getTopicStats(self, request, topic):
+        args = {
+            'title__icontains': topic
+        }
+        jobs = JobModel.objects.filter(**args)
+
+        if jobs is None:
+            return Response({'details': f'No stat found for {topic}'})
+
+        stats = jobs.aggregate(
+            total_jobs=Count('title'),
+            avg_position=Avg('positions'),
+            avg_salary=Avg('salary'),
+            min_salary=Min('salary'),
+            max_salary=Max('salary')
+        )
+        return Response(stats, status=status.HTTP_200_OK)
 
     def my_jobs(self, request):
         args = {'user': request.user.id}
@@ -77,7 +89,7 @@ class JobViewSet(ModelViewSet):
 class CandidateApplyViewSet(ModelViewSet):
     queryset = CandidateApplyModel.objects.all()
     serializer_class = CandidateApplySerializer
-    permission_classes = [IsAuthorOrIsAuthenticated]
+    # permission_classes = [IsAuthorOrIsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         user = request.user

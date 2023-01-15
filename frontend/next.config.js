@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   env: {
     API_URL: 'http://localhost:8008'
-  }
+  },
 }
 
 module.exports = nextConfig
