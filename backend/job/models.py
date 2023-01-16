@@ -73,19 +73,19 @@ class JobModel(models.Model):
     salary = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(1000000)])
     positions = models.IntegerField(default=1)
     company = models.CharField(max_length=100, null=True)
-    point = gismodels.PointField(default=Point(0.0, 0.0))
+    map = models.CharField(max_length=355, null=True)
     last_date = models.DateTimeField(default=return_date_time)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        gc = geocoder.mapquest(self.address, key=os.environ.get('GEOCODER_API'))
+    # def save(self, *args, **kwargs):
+    #     gc = geocoder.mapquest(self.address, key=os.environ.get('GEOCODER_API'))
 
-        lng = gc.lng
-        lat = gc.lat
+    #     lng = gc.lng
+    #     lat = gc.lat
 
-        self.point = Point(lng, lat)
-        return super(JobModel, self).save(*args, **kwargs)
+    #     self.point = Point(lng, lat)
+    #     return super(JobModel, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.title)

@@ -1,17 +1,17 @@
 import { Inter } from '@next/font/google'
 
 import Layout from '../../components/layout/Layout'
+import JobDetails from '../../components/job/JobDetails'
 
 import axios from 'axios'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function JobDetails({ job, candidates }) {
+export default function JobDetailsPage({ job, candidates }) {
 
-    console.log(job, candidates)
     return (
         <Layout>
-            <h1>Job Details</h1>
+            <JobDetails job={job} candidates={candidates} />
         </Layout>
     )
 }
