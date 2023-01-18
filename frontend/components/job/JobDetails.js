@@ -64,7 +64,7 @@ const JobDetails = ({ job, candidates }) => {
                                         <tr>
                                             <td>Expected Salary</td>
                                             <td>:</td>
-                                            <td>${job.salary}</td>
+                                            <td>BDT{job.salary}</td>
                                         </tr>
 
                                         <tr>

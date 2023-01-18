@@ -3,6 +3,8 @@ import Link from 'next/link';
 
 import moment from 'moment'
 
+import { TbCurrencyTaka } from 'react-icons/tb'
+
 const JobItem = ({ job }) => {
     return (
         <Link legacyBehavior href={`/jobs/${job.id}/`}>
@@ -29,7 +31,7 @@ const JobItem = ({ job }) => {
                             <i aria-hidden className="fas fa-briefcase"></i> {job.type}
                         </li>
                         <li>
-                            <i aria-hidden className="fas fa-money-check-alt"></i>${job.salary}
+                            <i aria-hidden className="fas fa-money-check-alt"></i><TbCurrencyTaka  />{job.salary}
                         </li>
                         <li>
                             <i aria-hidden className="far fa-clock"></i>

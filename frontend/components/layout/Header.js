@@ -23,7 +23,13 @@ const Header = () => {
                   </Link>
                   <Link href="/login">
                       <button className="loginButtonHeader">
-                          <span>Log in</span>
+                          <span>Login</span>
+                      </button>
+                  </Link>
+                  <Link href="/search">
+                      <button className="searchButtonHeader">
+                          <span>Search</span>
+                          {/* <i aria-hidden className="fas fa-search"></i> */}
                       </button>
                   </Link>
               </div>

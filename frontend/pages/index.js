@@ -15,8 +15,14 @@ export default function Index({data}) {
   )
 }
 
-export async function getServerSideProps() {
-  const result = await axios.get(`${process.env.API_URL}/job-api/jobs/`)
+export async function getServerSideProps({ query }) {
+
+  const keyword = query.keyword || ''
+  const location = query.location || ''
+
+  const queryStr = `keyword=${keyword}&location=${location}`
+
+  const result = await axios.get(`${process.env.API_URL}/job-api/jobs/?${queryStr}`);
   const data = result.data
 
   return {

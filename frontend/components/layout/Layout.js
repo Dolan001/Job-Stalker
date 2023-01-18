@@ -6,11 +6,11 @@ import Link from 'next/link'
 import Header from './Header'
 import Footer from './Footer'
 
-const Layout = ({ children, title = "Job-Stalker" }) => {
+const Layout = ({ children, title = "Find your job" }) => {
     return (
         <div>
             <Head>
-                <title>{title}</title>
+                <title>{title} - Job Stalker</title>
             </Head>
 
             <Header />
