@@ -29,7 +29,6 @@ const Header = () => {
                   <Link href="/search">
                       <button className="searchButtonHeader">
                           <span>Search</span>
-                          {/* <i aria-hidden className="fas fa-search"></i> */}
                       </button>
                   </Link>
               </div>

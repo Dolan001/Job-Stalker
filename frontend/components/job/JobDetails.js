@@ -90,7 +90,14 @@ const JobDetails = ({ job, candidates }) => {
 
                             <div className="job-location">
                                 <h4>Job Location</h4>
-                                <iframe src={ job.map } width="100%" height="520" style={{ border: '0' }} allowFullScreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                <iframe src={job.map}
+                                    width="100%"
+                                    height="520"
+                                    style={{ border: '0' }}
+                                    allowFullScreen=""
+                                    loading="lazy"
+                                    // referrerpolicy="no-referrer-when-downgrade"
+                                ></iframe>
                                 {/* <MapContainer
                                     center={{ lat: lat, lng: lng }}
                                     zoom={13}
