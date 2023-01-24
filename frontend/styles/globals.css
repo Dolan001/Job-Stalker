@@ -47,8 +47,8 @@ body {
 }
 
 .logoWrapper {
-  font-family: "Parisienne", cursive;
-  font-size: 24px;
+  font-family: fantasy;
+  font-size: 30px;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -57,13 +57,15 @@ body {
 .logoImgWrapper {
   width: 27px;
   display: flex;
-  margin-right: 10px;
+  margin-right: 15px;
 }
 .logo1 {
   color: var(--primary);
+  margin-top: 10px;
 }
 .logo2 {
   color: #618dd4;
+  margin-top: 10px;
 }
 
 .btnsWrapper {

@@ -17,7 +17,7 @@ class JobViewSet(ModelViewSet):
     # authentication_classes = []
     # permission_classes = [IsAuthorOrIsAuthenticated]
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         filter_set = JobFilter(request.GET, queryset=JobModel.objects.all().order_by('id'))
         count = filter_set.qs.count()
         result_per_page = 3

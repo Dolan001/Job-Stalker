@@ -233,8 +233,8 @@ const Filters = () => {
                   type="checkbox"
                   name="experience"
                   id="check10"
-                  value="3 Years or Above"
-                  defaultChecked={checkBoxHandler('experience', '5 Years or Above')}
+                  value="5 Years and Above"
+                  defaultChecked={checkBoxHandler('experience', '5 Years and Above')}
                   onClick={(e) => checkBoxHandleClick(e.target)}
               />
               <label className="form-check-label" htmlFor="check10">
