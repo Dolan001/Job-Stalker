@@ -1,6 +1,7 @@
 import React, {Component, useState, useContext, useEffect} from 'react';
 import {useRouter} from 'next/router'
 import Image from "next/image";
+import {toast} from "react-toastify";
 
 import AuthContext from "../../context/AuthContext";
 
@@ -8,7 +9,7 @@ const Login = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const {loading, error, isAuthenticated} = useContext(AuthContext)
+    const {loading, error, isAuthenticated, login} = useContext(AuthContext)
     const router = useRouter()
 
     useEffect(() => {
@@ -23,7 +24,7 @@ const Login = () => {
 
     const submitHandler = (e) => {
         e.preventDefault()
-        console.log(email, password)
+        login({username: email, password})
     }
 
     return (
@@ -44,12 +45,12 @@ const Login = () => {
                                 <div className="inputBox">
                                     <i aria-hidden className="fas fa-envelope"/>
                                     <input
-                                        type="email"
-                                        placeholder="Enter Your Email"
+                                        type="text"
+                                        placeholder="Enter Your Username"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        pattern='\S+@\S+\.\S+'
-                                        title='Your email is invalid'
+                                        // pattern='\S+@\S+\.\S+'
+                                        // title='Your email is invalid'
                                         required
                                     />
                                 </div>

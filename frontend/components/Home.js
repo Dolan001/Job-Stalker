@@ -11,7 +11,7 @@ const Home = ({ data }) => {
     const { jobs, count, result_per_page } = data
 
     const router = useRouter()
-    let { page = 1, keyword } = router.query
+    let { page= 1, type, education, experience, salary } = router.query
     page = Number(page)
 
     let queryParams;
@@ -43,8 +43,8 @@ const Home = ({ data }) => {
                     <div className='my-5'>
                         <h3 className='page-title'>
                             {
-                                keyword
-                                    ? `${jobs.length} Results for ${keyword}`
+                                type || experience || education || salary
+                                    ? `${jobs.length} Results for ${type || experience || education || salary}`
                                     : "Latest Jobs"
                             }
                         </h3>
