@@ -21,18 +21,18 @@ class RegisterViewSet(APIView):
         serializer = SignUpSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        if not User.objects.filter(username=data['email']).exists():
+        if not User.objects.filter(username=data['username']).exists():
             user = User.objects.create(
+                username=data['username'],
                 first_name=data['first_name'],
                 last_name=data['last_name'],
-                username=data['username'],
                 email=data['email'],
                 password=make_password(data['password'])
             )
             serializer = UserSerializer(user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'details': 'User Registered'}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'details': 'User Already Exists'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'User Already Exists'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(ModelViewSet):

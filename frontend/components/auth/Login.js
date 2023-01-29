@@ -4,17 +4,19 @@ import Image from "next/image";
 import {toast} from "react-toastify";
 
 import AuthContext from "../../context/AuthContext";
+import Link from "next/link";
 
 const Login = () => {
 
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const {loading, error, isAuthenticated, login} = useContext(AuthContext)
+    const {loading, error, isAuthenticated, login, clearError} = useContext(AuthContext)
     const router = useRouter()
 
     useEffect(() => {
         if (error) {
-            console.log(error)
+            toast.error(error)
+            clearError();
         }
         if (isAuthenticated && !loading) {
             router.push('/')
@@ -24,7 +26,7 @@ const Login = () => {
 
     const submitHandler = (e) => {
         e.preventDefault()
-        login({username: email, password})
+        login({username, password})
     }
 
     return (
@@ -32,7 +34,7 @@ const Login = () => {
             <div className="modalWrapper">
                 <div className="left">
                     <div style={{width: "100%", height: "100%", position: "relative"}}>
-                        <Image src="/images/login.jpeg" layout='fill' alt="login"/>
+                        <Image src="/images/register.jpeg" layout='fill' alt="login"/>
                     </div>
                 </div>
                 <div className="right">
@@ -43,14 +45,12 @@ const Login = () => {
                         <form className="form" onSubmit={submitHandler}>
                             <div className="inputWrapper">
                                 <div className="inputBox">
-                                    <i aria-hidden className="fas fa-envelope"/>
+                                    <i aria-hidden className="fas fa-user"/>
                                     <input
                                         type="text"
                                         placeholder="Enter Your Username"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        // pattern='\S+@\S+\.\S+'
-                                        // title='Your email is invalid'
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
                                         required
                                     />
                                 </div>
@@ -71,7 +71,7 @@ const Login = () => {
                                 </button>
                             </div>
                             <p style={{textDecoration: "none"}} className="signup">
-                                New to Jobbee? <a href="/register">Create an account</a>
+                                New to Jobbee? <Link href="/register">Create an account</Link>
                             </p>
                         </form>
                     </div>

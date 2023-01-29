@@ -10,12 +10,16 @@ class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            'username',
             'first_name',
             'last_name',
             'email',
             'password'
         )
         extra_kwargs = {
+            'username': {
+                'required': True, 'allow_blank': False
+            },
             'first_name': {
                 'required': True, 'allow_blank': False
             },
