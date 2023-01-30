@@ -1,9 +1,8 @@
 import { useState, useEffect, createContext } from "react";
 import {useRouter} from "next/router";
 import axios from "axios";
-import {toast} from "react-toastify";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(false)
@@ -13,11 +12,11 @@ export const AuthProvider = ({ children }) => {
 
     const router = useRouter()
 
-    useEffect(() => {
-        if(!user){
-            loadUser()
-        }
-    }, [user])
+    // useEffect(() => {
+    //     if(!user){
+    //         loadUser()
+    //     }
+    // }, [user])
 
     //Login User
     const login = async ({username, password}) => {
@@ -38,7 +37,6 @@ export const AuthProvider = ({ children }) => {
             }
 
         }catch (error) {
-            // console.log(error.response)
             setLoading(false);
             setError(error.response && error.response.data.detail || error.response.data.error)
         }
@@ -57,14 +55,13 @@ export const AuthProvider = ({ children }) => {
                 password
             })
 
-
+            console.log(res.data.error)
             if(res.data.details){
                 setLoading(false);
                 router.push("/login")
             }
 
         }catch (error) {
-            // console.log(error.response)
             setLoading(false);
             setError(error.response && error.response.data.detail || error.response.data.error)
         }

@@ -18,21 +18,32 @@ class RegisterViewSet(APIView):
 
     def post(self, request):
         data = request.data
+        username = request.data.get('username')
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'User Already Exists'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = SignUpSerializer(data=data)
         serializer.is_valid(raise_exception=True)
+        User.objects.create(
+            username=data['username'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email'],
+            password=make_password(data['password'])
+        )
+        return Response({'detail': 'User Registered'}, status=status.HTTP_201_CREATED)
 
-        if not User.objects.filter(username=data['username']).exists():
-            user = User.objects.create(
-                username=data['username'],
-                first_name=data['first_name'],
-                last_name=data['last_name'],
-                email=data['email'],
-                password=make_password(data['password'])
-            )
-            serializer = UserSerializer(user)
-            return Response({'details': 'User Registered'}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({'error': 'User Already Exists'}, status=status.HTTP_400_BAD_REQUEST)
+        # if not User.objects.filter(username=data['username']).exists():
+        #     user = User.objects.create(
+        #         username=data['username'],
+        #         first_name=data['first_name'],
+        #         last_name=data['last_name'],
+        #         email=data['email'],
+        #         password=make_password(data['password'])
+        #     )
+        #     serializer = UserSerializer(user)
+        #     return Response({'details': 'User Registered'}, status=status.HTTP_201_CREATED)
+        # else:
+        #     return Response({'error': 'User Already Exists'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(ModelViewSet):
