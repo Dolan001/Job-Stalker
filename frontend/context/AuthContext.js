@@ -12,11 +12,11 @@ export const AuthProvider = ({ children }) => {
 
     const router = useRouter()
 
-    // useEffect(() => {
-    //     if(!user){
-    //         loadUser()
-    //     }
-    // }, [user])
+    useEffect(() => {
+        if(!user){
+            loadUser()
+        }
+    }, [user])
 
     //Login User
     const login = async ({username, password}) => {
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
             })
 
             console.log(res.data.error)
-            if(res.data.details){
+            if(res.data.detail){
                 setLoading(false);
                 router.push("/login")
             }

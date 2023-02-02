@@ -1,12 +1,22 @@
-import React from 'react'
+import React, {useEffect, useContext} from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Pagination from 'react-js-pagination'
+import {toast} from "react-toastify";
 
 import JobItem from './job/JobItem'
 import Filters from './layout/Filters'
+import AuthContext from "../context/AuthContext";
 
 const Home = ({ data }) => {
+    const {error, clearError} = useContext(AuthContext)
+
+    useEffect(() => {
+        if (error) {
+            toast.error(error)
+            clearError();
+        }
+    })
 
     const { jobs, count, result_per_page } = data
 

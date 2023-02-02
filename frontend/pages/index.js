@@ -20,7 +20,6 @@ export async function getServerSideProps({ query }) {
   const type = query.type || ''
   const education = query.education || ''
   const experience = query.experience || ''
-
   const keyword = query.keyword || ''
   const location = query.location || ''
   const page = query.page || 1
