@@ -56,9 +56,16 @@ class UserViewSet(ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def update(self, request, *args, **kwargs):
+        instance = User.objects.get(username=request.user.username)
+        serializer = UserSerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def update_profile(self, request, *args, **kwargs):
         user = request.user
-        resume = request.FILES['resume']
+        resume = request.FILES.get('resume')
         if resume == '':
             return Response({"error": "Please upload your resume"})
 

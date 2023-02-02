@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [error, setError] = useState(null)
+    const [updated, setUpdated] = useState(null)
 
     const router = useRouter()
 
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
             setError(error.response && error.response.data.detail || error.response.data.error)
         }
     }
-
+    // Register User
     const register = async ({username, first_name, last_name, email, password}) => {
 
         try{
@@ -55,10 +56,38 @@ export const AuthProvider = ({ children }) => {
                 password
             })
 
-            console.log(res.data.error)
             if(res.data.detail){
                 setLoading(false);
                 router.push("/login")
+            }
+
+        }catch (error) {
+            setLoading(false);
+            setError(error.response && error.response.data.detail || error.response.data.error)
+        }
+    }
+
+    const updateProfile = async ({username, first_name, last_name, email, password}, access_token) => {
+
+        try{
+            setLoading(true)
+
+            const res = await axios.patch(`${process.env.API_URL}/account-api/update-profile/`, {
+                username,
+                first_name,
+                last_name,
+                email,
+                password
+            }, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            })
+
+            if(res.data){
+                setLoading(false);
+                setUpdated(true)
+                setUser(res.data)
             }
 
         }catch (error) {
@@ -120,10 +149,13 @@ export const AuthProvider = ({ children }) => {
                 user,
                 isAuthenticated,
                 error,
+                updated,
+                setUpdated,
                 register,
                 login,
                 logout,
                 loadUser,
+                updateProfile,
                 clearError
             }}
 

@@ -4,10 +4,10 @@ import {isAuthenticatedUser} from "../../utils/isAuthenticated";
 
 import axios from "axios";
 
-export default function UpdateProfilePage() {
+export default function UpdateProfilePage({access_token}) {
     return (
         <Layout title={'Update Your Profile'}>
-            <UpdateProfile/>
+            <UpdateProfile access_token={access_token}/>
         </Layout>
     )
 }
