@@ -9,7 +9,7 @@ export default async (req, res) => {
 
         if(!access){
             return res.status(401).json({
-                error: "Log in first to load the user"
+                error: "Log in first to access resources"
             })
         }
 

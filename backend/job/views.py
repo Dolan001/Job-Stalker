@@ -4,7 +4,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import status
+from rest_framework import status, permissions
+from rest_framework_simplejwt import authentication
 
 from .serializers import *
 from .filters import JobFilter
@@ -89,18 +90,19 @@ class JobViewSet(ModelViewSet):
 class CandidateApplyViewSet(ModelViewSet):
     queryset = CandidateApplyModel.objects.all()
     serializer_class = CandidateApplySerializer
-    # permission_classes = [IsAuthorOrIsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [authentication.JWTAuthentication]
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request, pk, *args, **kwargs):
         user = request.user
-        job_id = request.data['job']
-        job = get_object_or_404(JobModel, id=job_id)
+        # job_id = request.data['id']
+        job = get_object_or_404(JobModel, id=pk)
 
         if not bool(user.userprofile.resume):
             return Response({"detail": "Please upload your resume first"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if job.last_date < timezone.now():
-            return Response({'detail': 'Your can not apply this job. Date is over'}, status=status.HTTP_400_BAD_REQUEST)
+        # if job.last_date < timezone.now():
+        #     return Response({'detail': 'Your can not apply this job. Date is over'}, status=status.HTTP_400_BAD_REQUEST)
 
         if job.apply_job.filter(user=user).exists():
             return Response({'detail': 'Your already applied this job'}, status=status.HTTP_400_BAD_REQUEST)
@@ -115,7 +117,7 @@ class CandidateApplyViewSet(ModelViewSet):
         )
         return Response(
             {
-                'Applied': True,
+                'applied': True,
                 'Apply job id': apply_job.id,
             }, status=status.HTTP_200_OK
         )
@@ -129,10 +131,13 @@ class CandidateApplyViewSet(ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def is_applied(self, request, pk=None):
+    def is_applied(self, request, pk):
         user = request.user
+        print(user)
         job = get_object_or_404(JobModel, id=pk)
 
         applied = job.apply_job.filter(user=user).exists()
 
-        return Response(applied)
+        return Response(
+            {"applied": applied}, status=status.HTTP_200_OK
+            )

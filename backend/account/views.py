@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import status, permissions
+from rest_framework import status, permissions, authentication
+from rest_framework_simplejwt import authentication
 
 from .serializers import *
 from .models import *
@@ -49,6 +50,7 @@ class RegisterViewSet(APIView):
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    authentication_classes=[authentication.JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def my_profile(self, request):
@@ -63,21 +65,22 @@ class UserViewSet(ModelViewSet):
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def update_profile(self, request, *args, **kwargs):
-        user = request.user
-        resume = request.FILES.get('resume')
-        if resume == '':
-            return Response({"error": "Please upload your resume"})
-
-        user.userprofile.resume = resume
-        user.userprofile.save()
-
-        serializer = UserSerializer(user, many=False)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserProfileViewSet(ModelViewSet):
     queryset = UserProfileModel.objects.all()
     serializer_class = UserProfileSerializer
-    authentication_classes = []
-    permission_classes = []
+    authentication_classes = [authentication.JWTAuthentication,]
+    permission_classes = [permissions.IsAuthenticated]
+    
+
+    def update(self, request, *args, **kwargs):
+        username = User.objects.get(username=request.user.username)
+        serializer = UserProfileSerializer(username, data=request.data, partial=True)
+        if serializer.is_valid():
+            print(serializer)
+            serializer.save()
+            return Response({"success": 'Resume uploaded'}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Something went wrong when saving resume"})
+

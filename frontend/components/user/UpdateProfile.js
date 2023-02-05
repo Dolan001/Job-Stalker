@@ -11,7 +11,6 @@ const UpdateProfile = ({access_token}) => {
     const [first_name, setFirst_name] = useState('')
     const [last_name, setLast_name] = useState('')
     const [email, setEmail] = useState('')
-    const [resume, setResume] = useState('')
     const [password, setPassword] = useState('')
 
     const {updated, loading, error, user, clearError, updateProfile, setUpdated} = useContext(AuthContext)
@@ -34,12 +33,12 @@ const UpdateProfile = ({access_token}) => {
             toast.error(error)
             clearError();
         }
-    }, [error, user, loading])
+    }, [error, user, updated])
 
 
     const submitHandler = (e) => {
         e.preventDefault()
-        updateProfile({username, first_name, last_name, email, resume, password}, access_token)
+        updateProfile({username, first_name, last_name, email, password}, access_token)
     }
 
     return (

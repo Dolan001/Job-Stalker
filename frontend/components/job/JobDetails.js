@@ -1,13 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import moment from 'moment'
 
-// import { MapContainer, TileLayer, useMap } from 'react-leaflet'
-// import LocationMarker from '../map/LocationMarker'
+import JobContext from '../../context/JobContext'
+import { toast } from 'react-toastify'
 
-const JobDetails = ({ job, candidates }) => {
-    // const cordinates = job.point.split("(")[1].replace(")", "").split(" ")
-    // const lat = cordinates[0]
-    // const lng = cordinates[1]
+const JobDetails = ({ job, candidates, access_token }) => {
+
+    const { loading, applyJob, applied, checkJobApplied, clearError, error } = useContext(JobContext)
+
+    useEffect(() => {
+        if (error) {
+            toast.error(error)
+            clearError()
+        }
+        if (access_token) {
+            checkJobApplied(job.id, access_token)
+        } else {
+            toast.error("Please login to apply the job")
+        }
+    }, [error])
+
+    const applyJobHandler = () => {
+        applyJob(job.id, access_token)
+    }
 
     return (
         <div className="job-details-wrapper">
@@ -28,9 +43,26 @@ const JobDetails = ({ job, candidates }) => {
 
                                 <div className="mt-3">
                                     <span>
-                                        <button className="btn btn-primary px-4 py-2 apply-btn">
-                                            Apply Now
-                                        </button>
+                                        {
+                                            loading ? (
+                                                "Loading..."
+                                            ) : applied ? (
+                                                <button disabled className="btn btn-success px-4 py-2 apply-btn">
+                                                    <i aria-hidden className='fas fa-check'></i>
+                                                    {loading ? "Loading" : " Applied"}
+                                                </button>
+                                            ) : access_token ? (
+                                                <button className="btn btn-primary px-4 py-2 apply-btn" onClick={applyJobHandler}>
+                                                    {loading ? "Loading..." : "Apply Now"}
+                                                </button>
+                                            ) : (
+                                                <button disabled className="btn btn-danger px-4 py-2 apply-btn" onClick={applyJobHandler}>
+                                                    <i aria-hidden className='fas fa-times'></i>
+                                                    {loading ? "Loading..." : " Apply Now"}
+                                                </button>
+                                            )
+                                        }
+
                                         <span className="ml-4 text-success">
                                             <b>{candidates}</b> candidates has applied to this job.
                                         </span>
@@ -96,7 +128,7 @@ const JobDetails = ({ job, candidates }) => {
                                     style={{ border: '0' }}
                                     allowFullScreen=""
                                     loading="lazy"
-                                    // referrerpolicy="no-referrer-when-downgrade"
+                                // referrerpolicy="no-referrer-when-downgrade"
                                 ></iframe>
                                 {/* <MapContainer
                                     center={{ lat: lat, lng: lng }}

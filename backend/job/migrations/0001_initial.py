@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('positions', models.IntegerField(default=1)),
                 ('company', models.CharField(max_length=100, null=True)),
                 ('point', django.contrib.gis.db.models.fields.PointField(default=django.contrib.gis.geos.point.Point(0.0, 0.0), srid=4326)),
-                ('last_date', models.DateTimeField(default=job.models.return_date_time)),
+                ('last_date', models.DateTimeField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
             ],

@@ -47,7 +47,7 @@ const Header = () => {
                                    aria-haspopup='true'
                                    aria-expanded='false'
                                 >
-                                    <span>Hi, {user.first_name}</span> {" "}
+                                    <span>Hi, {user.username}</span> {" "}
                                 </a>
                                 <div className='dropdown-menu' aria-labelledby='dropDownMenuButton'>
                                     <Link href="/employeer/jobs" legacyBehavior>

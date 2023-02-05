@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import axios from "axios";
 
 const AuthContext = createContext(null);
@@ -10,18 +10,19 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [error, setError] = useState(null)
     const [updated, setUpdated] = useState(null)
+    const [uploaded, setUploaded] = useState(null)
 
     const router = useRouter()
 
     useEffect(() => {
-        if(!user){
+        if (!user) {
             loadUser()
         }
     }, [user])
 
     //Login User
-    const login = async ({username, password}) => {
-        try{
+    const login = async ({ username, password }) => {
+        try {
 
             setLoading(true)
 
@@ -30,22 +31,22 @@ export const AuthProvider = ({ children }) => {
                 password
             })
 
-            if(res.data.success){
+            if (res.data.success) {
                 await loadUser();
                 setIsAuthenticated(true);
                 setLoading(false);
                 router.push("/")
             }
 
-        }catch (error) {
+        } catch (error) {
             setLoading(false);
             setError(error.response && error.response.data.detail || error.response.data.error)
         }
     }
     // Register User
-    const register = async ({username, first_name, last_name, email, password}) => {
+    const register = async ({ username, first_name, last_name, email, password }) => {
 
-        try{
+        try {
             setLoading(true)
 
             const res = await axios.post(`${process.env.API_URL}/account-api/register/`, {
@@ -56,20 +57,20 @@ export const AuthProvider = ({ children }) => {
                 password
             })
 
-            if(res.data.detail){
+            if (res.data.detail) {
                 setLoading(false);
                 router.push("/login")
             }
 
-        }catch (error) {
+        } catch (error) {
             setLoading(false);
             setError(error.response && error.response.data.detail || error.response.data.error)
         }
     }
+    //Update profile
+    const updateProfile = async ({ username, first_name, last_name, email, password }, access_token) => {
 
-    const updateProfile = async ({username, first_name, last_name, email, password}, access_token) => {
-
-        try{
+        try {
             setLoading(true)
 
             const res = await axios.patch(`${process.env.API_URL}/account-api/update-profile/`, {
@@ -84,13 +85,44 @@ export const AuthProvider = ({ children }) => {
                 }
             })
 
-            if(res.data){
+            if (res.data) {
                 setLoading(false);
                 setUpdated(true)
                 setUser(res.data)
             }
 
-        }catch (error) {
+        } catch (error) {
+            setLoading(false);
+            setError(error.response && error.response.data.detail || error.response.data.error)
+        }
+    }
+    //Upload files
+    const uploadResume = async (formdata, access_token) => {
+        // const data = formdata?.get("resume")
+        // console.log(data);
+
+        try {
+            setLoading(true)
+
+            const res = await axios.patch(`${process.env.API_URL}/account-api/upload-resume/`, {
+                formdata
+            }, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+
+            if (res.data.success) {
+                setLoading(false);
+                setUploaded(true)
+            }
+            if (res.data.error) {
+                setLoading(false);
+                setError(res.data.error)
+            }
+
+        } catch (error) {
             setLoading(false);
             setError(error.response && error.response.data.detail || error.response.data.error)
         }
@@ -98,19 +130,19 @@ export const AuthProvider = ({ children }) => {
 
     //Load User
     const loadUser = async () => {
-        try{
+        try {
 
             setLoading(true)
 
             const res = await axios.get('/api/auth/user')
 
-            if(res.data.user){
+            if (res.data.user) {
                 setIsAuthenticated(true);
                 setLoading(false);
                 setUser(res.data.user)
             }
 
-        }catch (error) {
+        } catch (error) {
             setLoading(false);
             setIsAuthenticated(false)
             setUser(null)
@@ -120,16 +152,16 @@ export const AuthProvider = ({ children }) => {
 
     //logout User
     const logout = async () => {
-        try{
+        try {
 
             const res = await axios.post('/api/auth/logout')
 
-            if(res.data.success){
+            if (res.data.success) {
                 setIsAuthenticated(false);
                 setUser(null)
             }
 
-        }catch (error) {
+        } catch (error) {
             setLoading(false);
             setIsAuthenticated(false)
             setUser(null)
@@ -150,12 +182,15 @@ export const AuthProvider = ({ children }) => {
                 isAuthenticated,
                 error,
                 updated,
+                uploaded,
                 setUpdated,
+                setUploaded,
                 register,
                 login,
                 logout,
                 loadUser,
                 updateProfile,
+                uploadResume,
                 clearError
             }}
 
