@@ -24,6 +24,10 @@ const JobDetails = ({ job, candidates, access_token }) => {
         applyJob(job.id, access_token)
     }
 
+    const today = moment(Date.now())
+    const last_date = moment(job.last_date)
+    const is_date_passed = last_date.diff(today, 'days') < 0 ? true : false
+
     return (
         <div className="job-details-wrapper">
             <div className="container container-fluid">
@@ -52,7 +56,7 @@ const JobDetails = ({ job, candidates, access_token }) => {
                                                     {loading ? "Loading" : " Applied"}
                                                 </button>
                                             ) : access_token ? (
-                                                <button className="btn btn-primary px-4 py-2 apply-btn" onClick={applyJobHandler}>
+                                                <button disabled={is_date_passed} className="btn btn-primary px-4 py-2 apply-btn" onClick={applyJobHandler}>
                                                     {loading ? "Loading..." : "Apply Now"}
                                                 </button>
                                             ) : (
@@ -157,15 +161,17 @@ const JobDetails = ({ job, candidates, access_token }) => {
                             <h5>Last Date:</h5>
                             <p>{job.last_date.substring(0, 10)}</p>
                         </div>
-
-                        <div className="mt-5 p-0">
-                            <div className="alert alert-danger">
-                                <h5>Note:</h5>
-                                You can no longer apply to this job. This job is expired. Last
-                                date to apply for this job was: <b>15-2-2022</b>
-                                <br /> Checkout others job on Jobbee.
+                        {is_date_passed && !applied && (
+                            <div className="mt-5 p-0">
+                                <div className="alert alert-danger">
+                                    <h5>Note:</h5>
+                                    You are not able to apply this job because theclast date is expired. Last
+                                    date to apply for this job was: <b>{job.last_date.substring(0, 10)}</b>.
+                                    <br /> Checkout others job on Job Stalker.
+                                </div>
                             </div>
-                        </div>
+                        )}
+
                     </div>
                 </div>
             </div>
