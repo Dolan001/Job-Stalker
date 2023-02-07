@@ -37,12 +37,15 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
 
+    profile_id = serializers.IntegerField(source='userprofile.id', read_only=True)
     resume = serializers.CharField(source='userprofile.resume', read_only=True)
     image = serializers.CharField(source='userprofile.image', read_only=True)
 
     class Meta:
         model = User
         fields = (
+            'id',
+            'profile_id',
             'first_name',
             'last_name',
             'email',
@@ -54,6 +57,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
+    # user = serializers.SerializerMethodField()
+
+
     class Meta:
         model = UserProfileModel
         fields = '__all__'
+
+    # def get_user(self, obj):
+    #     request = self.context.get('request', None)
+    #     print(request.user.username )
+    #     if request:
+    #         return request.user.id   

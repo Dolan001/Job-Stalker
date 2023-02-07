@@ -27,8 +27,9 @@ const UploadResume = ({access_token}) => {
         e.preventDefault()
         const formdata = new FormData();
         formdata.append('resume', resume);
+        const data = formdata.get('resume');
 
-        uploadResume(formdata, access_token)
+        uploadResume(data, access_token)
     }
     return (
         <div className="modalMask">

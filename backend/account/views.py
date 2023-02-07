@@ -1,12 +1,14 @@
+import ujson
+from django.http import QueryDict
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import status, permissions, authentication
+from rest_framework import status, permissions, authentication, parsers
 from rest_framework_simplejwt import authentication
 
 from .serializers import *
@@ -70,17 +72,18 @@ class UserViewSet(ModelViewSet):
 class UserProfileViewSet(ModelViewSet):
     queryset = UserProfileModel.objects.all()
     serializer_class = UserProfileSerializer
-    authentication_classes = [authentication.JWTAuthentication,]
+    authentication_classes = [authentication.JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-    
+    lookup_field='pk'
 
     def update(self, request, *args, **kwargs):
-        username = User.objects.get(username=request.user.username)
-        serializer = UserProfileSerializer(username, data=request.data, partial=True)
-        if serializer.is_valid():
-            print(serializer)
-            serializer.save()
-            return Response({"success": 'Resume uploaded'}, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "Something went wrong when saving resume"})
+        user = request.user
+        resume = request.data.get('resume')
+
+        if resume == '':
+            return Response({'error': 'Please upload your resume first'})
+
+        user.userprofile.resume = resume
+        user.userprofile.save()
+        return Response({'success': 'Resume uploaded succefully'})
 

@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
     //Upload files
-    const uploadResume = async (formdata, access_token) => {
+    const uploadResume = async ( resume, access_token) => {
         // const data = formdata?.get("resume")
         // console.log(data);
 
@@ -105,15 +105,15 @@ export const AuthProvider = ({ children }) => {
             setLoading(true)
 
             const res = await axios.patch(`${process.env.API_URL}/account-api/upload-resume/`, {
-                formdata
+                resume
             }, {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
-                    'Content-Type': 'multipart/form-data'
+                    "Content-Type" : "multipart/form-data"
                 }
             })
 
-            if (res.data.success) {
+            if (res.data) {
                 setLoading(false);
                 setUploaded(true)
             }
