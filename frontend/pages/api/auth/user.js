@@ -27,8 +27,14 @@ export default async (req, res) => {
             }
 
         } catch (error) {
+            res.setHeader('Set-Cookie', [
+                cookie.serialize('access', '', {
+                    maxAge: -1,
+                    path: '/',
+                })
+            ])
             res.status(error?.response.status).json({
-                error: "Something went wrong when retrieving user",
+                error: "Session expired, please log in again",
             })
         }
     }

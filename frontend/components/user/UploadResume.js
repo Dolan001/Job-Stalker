@@ -65,13 +65,13 @@ const UploadResume = ({access_token}) => {
 
                                     <Link href={`https://job-stalker-bucket.s3.amazonaws.com/${user.resume}`} legacyBehavior>
                                         <a
-                                            className="text-success text-center ml-4"
+                                            className="text-success text-center"
                                             rel="noreferrer"
                                             target="_blank"
                                         >
                                             <b>
-                                                <i aria-hidden className="fas fa-download"></i> Download
-                                                Your Resume
+                                                <i aria-hidden className="fas fa-download"></i>
+                                                { " " }{user.resume.split('/')[1].split('.')[0].substring(0, 30)}
                                             </b>
                                         </a>
                                     </Link>
