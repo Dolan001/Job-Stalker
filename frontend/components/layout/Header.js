@@ -53,7 +53,7 @@ const Header = () => {
                                     <Link href="/employeer/jobs" legacyBehavior>
                                         <a className='dropdown-item'>My Jobs</a>
                                     </Link>
-                                    <Link href="/me/applied" legacyBehavior>
+                                    <Link href="/profile/applied" legacyBehavior>
                                         <a className='dropdown-item'>Applied Jobs</a>
                                     </Link>
                                     <Link href="/profile" legacyBehavior>

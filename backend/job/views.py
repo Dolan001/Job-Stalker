@@ -55,8 +55,8 @@ class JobViewSet(ModelViewSet):
         }
         jobs = JobModel.objects.filter(**args)
 
-        if jobs is None:
-            return Response({'details': f'No stat found for {topic}'})
+        if not jobs:
+            return Response({'detail': f'No stats found for {topic}'})
 
         stats = jobs.aggregate(
             total_jobs=Count('title'),

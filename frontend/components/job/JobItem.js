@@ -7,7 +7,7 @@ import { TbCurrencyTaka } from 'react-icons/tb'
 
 const JobItem = ({ job }) => {
     return (
-        <Link legacyBehavior href={`/jobs/${job.id}/`}>
+        <Link legacyBehavior href={`/job/${job.id}/`}>
             <a className="job-listing">
                 <div className="job-listing-details">
                     <div className="job-listing-description">

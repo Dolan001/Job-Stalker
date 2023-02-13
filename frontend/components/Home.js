@@ -58,7 +58,7 @@ const Home = ({ data }) => {
                                     : "Latest Jobs"
                             }
                         </h3>
-                        <Link href='/stats'>
+                        <Link href='/job/stats'>
                             <button className='btn btn-secondary float-right stats_btn'>
                                 Get topic stats
                             </button>
