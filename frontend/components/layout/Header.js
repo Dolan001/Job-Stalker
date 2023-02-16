@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -6,7 +6,7 @@ import AuthContext from "../../context/AuthContext";
 
 const Header = () => {
 
-    const {loading, user, logout} = useContext(AuthContext)
+    const { loading, user, logout } = useContext(AuthContext)
 
     const logoutHandler = () => {
         logout();
@@ -18,14 +18,14 @@ const Header = () => {
                 <Link href='/'>
                     <div className="logoWrapper">
                         <div className="logoImgWrapper">
-                            <Image height="38" width="38" src="/images/logo3.png" alt=""/>
+                            <Image height="38" width="38" src="/images/logo3.png" alt="" />
                         </div>
                         <span className="logo1">Job </span>
                         <span className="logo2">Stalker</span>
                     </div>
                 </Link>
                 <div className="btnsWrapper">
-                    <Link href="/employer/jobs/new">
+                    <Link href="/job/new">
                         <button className="postAJobButton">
                             <span>Post a job</span>
                         </button>
@@ -41,16 +41,16 @@ const Header = () => {
                         user ? (
                             <div className='dropdown ml-3'>
                                 <a href='#'
-                                   className='btn dropdown-toggle mr-4'
-                                   id="dropDownMenuButton"
-                                   data-toggle='dropdown'
-                                   aria-haspopup='true'
-                                   aria-expanded='false'
+                                    className='btn dropdown-toggle mr-4'
+                                    id="dropDownMenuButton"
+                                    data-toggle='dropdown'
+                                    aria-haspopup='true'
+                                    aria-expanded='false'
                                 >
                                     <span>Hi, {user.username}</span> {" "}
                                 </a>
                                 <div className='dropdown-menu' aria-labelledby='dropDownMenuButton'>
-                                    <Link href="/employeer/jobs" legacyBehavior>
+                                    <Link href="/job/me" legacyBehavior>
                                         <a className='dropdown-item'>My Jobs</a>
                                     </Link>
                                     <Link href="/profile/applied" legacyBehavior>

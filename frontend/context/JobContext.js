@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import NewJob from "../components/job/NewJob";
 
 const JobContext = createContext(null);
 
@@ -11,8 +12,45 @@ export const JobProvider = ({ children }) => {
     const [updated, setUpdated] = useState(null)
     const [applied, setApplied] = useState(false)
     const [stats, setStats] = useState(null)
+    const [created, setCreated] = useState(false)
 
+    // new job
+    const newJob = async ({ title, description, email, address, map, type, education, industry, experience, salary, positions, company, last_date }, access_token) => {
+        try {
+            setLoading(true)
 
+            const res = await axios.post(`${process.env.API_URL}/job-api/jobs/`, {
+                title,
+                description,
+                email,
+                address,
+                map,
+                type,
+                education,
+                industry,
+                experience,
+                salary,
+                positions,
+                company,
+                last_date
+            }, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            }
+            )
+
+            if (res.data) {
+                setLoading(false)
+                setCreated(true)
+            }
+        } catch (error) {
+            setLoading(false);
+            setError(error.response && error.response.data.detail || error.response.data.error)
+        }
+    }
+
+    // apply job
     const applyJob = async (id, access_token) => {
         try {
             setLoading(true)
@@ -76,7 +114,7 @@ export const JobProvider = ({ children }) => {
                 setLoading(false)
                 setStats(res.data)
             }
-            
+
 
         } catch (error) {
             setLoading(false);
@@ -97,10 +135,13 @@ export const JobProvider = ({ children }) => {
                 updated,
                 applied,
                 stats,
+                created,
+                setCreated,
                 clearError,
                 applyJob,
                 checkJobApplied,
                 topicStats,
+                newJob
             }}
         >
             {children}

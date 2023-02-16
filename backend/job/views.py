@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import status, permissions
-from rest_framework_simplejwt import authentication
+from rest_framework import status, permissions, authentication
+from rest_framework_simplejwt import authentication as jwtauth
 
 from .serializers import *
 from .filters import JobFilter
@@ -15,8 +15,11 @@ from .permissions import IsAuthorOrIsAuthenticated
 class JobViewSet(ModelViewSet):
     queryset = JobModel.objects.all()
     serializer_class = JobSerializer
-    # authentication_classes = []
-    # permission_classes = [IsAuthorOrIsAuthenticated]
+    # authentication_classes = [jwtauth.JWTAuthentication, authentication.BasicAuthentication]
+    # permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
 
     def list(self, request, *args, **kwargs):
         filter_set = JobFilter(request.GET, queryset=JobModel.objects.all().order_by('id'))
@@ -91,7 +94,7 @@ class CandidateApplyViewSet(ModelViewSet):
     queryset = CandidateApplyModel.objects.all()
     serializer_class = CandidateApplySerializer
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [authentication.JWTAuthentication]
+    authentication_classes = [jwtauth.JWTAuthentication]
 
     def create(self, request, pk, *args, **kwargs):
         user = request.user

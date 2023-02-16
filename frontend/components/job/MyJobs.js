@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
 
-const JobApplied = ({ jobs }) => {
+const MyJobs = ({ jobs, access_token }) => {
 
     const [hydrated, setHydrated] = useState(false);
     useEffect(() => {
@@ -17,6 +17,11 @@ const JobApplied = ({ jobs }) => {
 
     const columns = [
         {
+            name: 'Job ID',
+            sortable: true,
+            selector: (row) => row.id
+        },
+        {
             name: 'Job Name',
             sortable: true,
             selector: (row) => row.title
@@ -27,21 +32,6 @@ const JobApplied = ({ jobs }) => {
             selector: (row) => row.salary
         },
         {
-            name: 'Education',
-            sortable: true,
-            selector: (row) => row.education
-        },
-        {
-            name: 'Experience',
-            sortable: true,
-            selector: (row) => row.experience
-        },
-        {
-            name: 'AppliedOn',
-            sortable: true,
-            selector: (row) => row.appliedOn
-        },
-        {
             name: 'Action',
             sortable: true,
             selector: (row) => row.action
@@ -50,20 +40,34 @@ const JobApplied = ({ jobs }) => {
 
     const data = []
 
-    jobs && jobs.forEach((item) => {
+    jobs && jobs.forEach((job) => {
         data.push({
-            title: item.job.title,
-            salary: item.job.salary,
-            education: item.job.education,
-            experience: item.job.experience,
-            appliedOn: item.applied_at.substring(0, 10),
+            id: job.id,
+            title: job.title,
+            salary: job.salary,
             action: (
                 <>
-                    <Link href={`/job/${item.job.id}`} legacyBehavior>
+                    <Link href={`/job/${job.id}`} legacyBehavior>
                         <a className='btn btn-primary'>
                             <i aria-hidden className='fa fa-eye'></i>
                         </a>
                     </Link>
+
+                    <Link href={`/job/me/candidates/${job.id}`} legacyBehavior>
+                        <a className='btn btn-success my-2 mx-1'>
+                            <i aria-hidden className='fa fa-users'></i>
+                        </a>
+                    </Link>
+
+                    <Link href={`/job/me/${job.id}`} legacyBehavior>
+                        <a className='btn btn-warning'>
+                            <i aria-hidden className='fa fa-pencil'></i>
+                        </a>
+                    </Link>
+
+                    <button className='btn btn-danger mx-1'>
+                        <i className='fa fa-trash'></i>
+                    </button>
                 </>
             )
         })
@@ -74,7 +78,7 @@ const JobApplied = ({ jobs }) => {
         <div className='row'>
             <div className='col-1'></div>
             <div className='col-10 mt-5'>
-                <h4 className='my-5'>Jobs Applied</h4>
+                <h4 className='my-5'>My Jobs</h4>
                 <DataTable columns={columns} data={data} pagination responsive />
             </div>
             <div className='col-1'></div>
@@ -82,4 +86,4 @@ const JobApplied = ({ jobs }) => {
     )
 }
 
-export default JobApplied
+export default MyJobs
