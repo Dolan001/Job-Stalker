@@ -13,6 +13,7 @@ export const JobProvider = ({ children }) => {
     const [applied, setApplied] = useState(false)
     const [stats, setStats] = useState(null)
     const [created, setCreated] = useState(false)
+    const [deleted, setDeleted] = useState(false)
 
     // new job
     const newJob = async ({ title, description, email, address, map, type, education, industry, experience, salary, positions, company, last_date }, access_token) => {
@@ -43,6 +44,42 @@ export const JobProvider = ({ children }) => {
             if (res.data) {
                 setLoading(false)
                 setCreated(true)
+            }
+        } catch (error) {
+            setLoading(false);
+            setError(error.response && error.response.data.detail || error.response.data.error)
+        }
+    }
+
+    //update job
+    const updateJob = async (id, { title, description, email, address, map, type, education, industry, experience, salary, positions, company, last_date }, access_token) => {
+        try {
+            setLoading(true)
+
+            const res = await axios.patch(`${process.env.API_URL}/job-api/jobs/${id}/`, {
+                title,
+                description,
+                email,
+                address,
+                map,
+                type,
+                education,
+                industry,
+                experience,
+                salary,
+                positions,
+                company,
+                last_date
+            }, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            }
+            )
+
+            if (res.data) {
+                setLoading(false)
+                setUpdated(true)
             }
         } catch (error) {
             setLoading(false);
@@ -121,6 +158,25 @@ export const JobProvider = ({ children }) => {
             setError(error.response && error.response.data.detail || error.response.data.error)
         }
     }
+    // delete job
+    const deleteJob = async (id, access_token) => {
+        try {
+            setLoading(true)
+
+            const res = await axios.delete(`${process.env.API_URL}/job-api/jobs/${id}/`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            }
+            )
+            setLoading(false);
+            setDeleted(true)
+
+        } catch (error) {
+            setLoading(false);
+            setError(error.response && error.response.data.detail || error.response.data.error)
+        }
+    }
 
     //Clear error
     const clearError = () => {
@@ -136,12 +192,17 @@ export const JobProvider = ({ children }) => {
                 applied,
                 stats,
                 created,
+                deleted,
                 setCreated,
+                setUpdated,
+                setDeleted,
                 clearError,
                 applyJob,
                 checkJobApplied,
                 topicStats,
-                newJob
+                newJob,
+                updateJob,
+                deleteJob,
             }}
         >
             {children}
